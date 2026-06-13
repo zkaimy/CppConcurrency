@@ -1,0 +1,12 @@
+CompileFlags:
+  CompilationDatabase:
+    - .
+    - out/build/windows-ninja-multi
+    - out/build/linux-ninja
+    - out/build/macos-ninja
+
+QueryDriver:
+  - C:/Program Files/Microsoft Visual Studio/**/cl.exe
+  - C:/Program Files (x86)/Microsoft Visual Studio/**/cl.exe
+  - /usr/bin/clang++
+  - /usr/bin/g++

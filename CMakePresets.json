@@ -1,0 +1,128 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "common",
+            "hidden": true,
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}"
+        },
+        {
+            "name": "win-ninja",
+            "displayName": "win x64 Ninja",
+            "inherits": "common",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "generator": "Ninja Multi-Config",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "cl.exe",
+                "CMAKE_CXX_COMPILER": "cl.exe"
+            },
+            "environment": {
+                "PATH": "$env{VSINSTALLDIR}Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja;$env{VSINSTALLDIR}VC/Tools/Llvm/x64/bin;$penv{PATH}"
+            }
+        },
+        {
+            "name": "win-vs",
+            "displayName": "win x64 VS (调试用)",
+            "inherits": "common",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "generator": "Visual Studio 18 2026",
+            "architecture": {
+                "value": "x64",
+                "strategy": "external"
+            }
+        },
+        {
+            "name": "linux",
+            "displayName": "Linux Ninja",
+            "inherits": "common",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "generator": "Ninja Multi-Config"
+        },
+        {
+            "name": "macos",
+            "displayName": "macOS Ninja",
+            "inherits": "common",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            },
+            "generator": "Ninja Multi-Config"
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "win-ninja-debug",
+            "configurePreset": "win-ninja",
+            "configuration": "Debug"
+        },
+        {
+            "name": "win-ninja-release",
+            "configurePreset": "win-ninja",
+            "configuration": "Release"
+        },
+        {
+            "name": "win-ninja-rwd",
+            "configurePreset": "win-ninja",
+            "configuration": "RelWithDebInfo"
+        },
+        {
+            "name": "win-vs-debug",
+            "configurePreset": "win-vs",
+            "configuration": "Debug"
+        },
+        {
+            "name": "win-vs-release",
+            "configurePreset": "win-vs",
+            "configuration": "Release"
+        },
+        {
+            "name": "win-vs-rwd",
+            "configurePreset": "win-vs",
+            "configuration": "RelWithDebInfo"
+        },
+        {
+            "name": "linux-debug",
+            "configurePreset": "linux",
+            "configuration": "Debug"
+        },
+        {
+            "name": "linux-release",
+            "configurePreset": "linux",
+            "configuration": "Release"
+        },
+        {
+            "name": "linux-rwd",
+            "configurePreset": "linux",
+            "configuration": "RelWithDebInfo"
+        },
+        {
+            "name": "macos-debug",
+            "configurePreset": "macos",
+            "configuration": "Debug"
+        },
+        {
+            "name": "macos-release",
+            "configurePreset": "macos",
+            "configuration": "Release"
+        },
+        {
+            "name": "macos-rwd",
+            "configurePreset": "macos",
+            "configuration": "RelWithDebInfo"
+        }
+    ]
+}
