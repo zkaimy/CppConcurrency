@@ -5,7 +5,10 @@
             "name": "common",
             "hidden": true,
             "binaryDir": "${sourceDir}/out/build/${presetName}",
-            "installDir": "${sourceDir}/out/install/${presetName}"
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "cacheVariables": {
+                "DEPS_SUFFIX": "${presetName}"
+            }
         },
         {
             "name": "win-ninja",
@@ -20,9 +23,6 @@
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "cl.exe",
                 "CMAKE_CXX_COMPILER": "cl.exe"
-            },
-            "environment": {
-                "PATH": "$env{VSINSTALLDIR}Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja;$env{VSINSTALLDIR}VC/Tools/Llvm/x64/bin;$penv{PATH}"
             }
         },
         {

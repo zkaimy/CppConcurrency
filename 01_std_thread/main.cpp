@@ -1,28 +1,24 @@
-#include <iostream>
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+#ifdef _WIN32
+#define NOMINMAX
+#include <windows.h>
+#endif
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
 #include <thread>
 #include <vector>
 #include <string>
 #include <functional>
-#include <mutex>
-#include <sstream>
 #include <numeric>
 #include <chrono>
 
 using namespace std::chrono_literals;
 
-static std::mutex g_print_mutex;
-
-void safe_print(const std::string& msg)
+void init_logger()
 {
-    std::lock_guard<std::mutex> lock(g_print_mutex);
-    std::cout << msg << "\n";
-}
-
-std::string tid()
-{
-    std::ostringstream oss;
-    oss << std::this_thread::get_id();
-    return oss.str();
+    auto logger = spdlog::stdout_color_mt("main");
+    logger->set_pattern("[%H:%M:%S.%f|%l|%t|%!] %v");
+    spdlog::set_default_logger(logger);
 }
 
 // ============================================================
@@ -31,17 +27,17 @@ std::string tid()
 
 void basic_function()
 {
-    safe_print("[1.1] 普通函数 - thread id: " + tid());
+    SPDLOG_INFO("[1.1] 普通函数");
 }
 
 auto basic_lambda = []()
 {
-    safe_print("[1.2] Lambda - thread id: " + tid());
+    SPDLOG_INFO("[1.2] Lambda");
 };
 
 void print_value(int value, const std::string& label)
 {
-    safe_print("[1.3] 带参数: " + label + " = " + std::to_string(value));
+    SPDLOG_INFO("[1.3] 带参数: {} = {}", label, value);
 }
 
 class FunctionObject
@@ -49,7 +45,7 @@ class FunctionObject
 public:
     void operator()() const
     {
-        safe_print("[1.4] 函数对象 - thread id: " + tid());
+        SPDLOG_INFO("[1.4] 函数对象");
     }
 };
 
@@ -58,11 +54,11 @@ class Worker
 public:
     void do_work(int id)
     {
-        safe_print("[1.5] 成员函数 - worker " + std::to_string(id));
+        SPDLOG_INFO("[1.5] 成员函数 - worker {}", id);
     }
     static void static_work()
     {
-        safe_print("[1.5] 静态成员函数 - thread id: " + tid());
+        SPDLOG_INFO("[1.5] 静态成员函数");
     }
 };
 
@@ -73,12 +69,12 @@ public:
 void modify_value(int& value)
 {
     value *= 2;
-    safe_print("[2.1] 引用传递: 值变为 " + std::to_string(value));
+    SPDLOG_INFO("[2.1] 引用传递: 值变为 {}", value);
 }
 
 void by_value_copy(const std::string s)
 {
-    safe_print("[2.2] 值传递（拷贝）: " + s);
+    SPDLOG_INFO("[2.2] 值传递（拷贝）: {}", s);
 }
 
 // ============================================================
@@ -87,9 +83,9 @@ void by_value_copy(const std::string s)
 
 void long_task(const std::string& name, int seconds)
 {
-    safe_print("[3] " + name + " 开始，耗时 " + std::to_string(seconds) + "s");
+    SPDLOG_INFO("[3] {} 开始，耗时 {}s", name, seconds);
     std::this_thread::sleep_for(std::chrono::seconds(seconds));
-    safe_print("[3] " + name + " 完成");
+    SPDLOG_INFO("[3] {} 完成", name);
 }
 
 // ============================================================
@@ -98,11 +94,8 @@ void long_task(const std::string& name, int seconds)
 
 void print_thread_info(int index)
 {
-    std::ostringstream oss;
-    oss << "[4] 线程 " << index
-        << " | id: " << std::this_thread::get_id()
-        << " | hardware_concurrency: " << std::thread::hardware_concurrency();
-    safe_print(oss.str());
+    SPDLOG_INFO("[4] 线程 {}  | hardware_concurrency: {}",
+        index, std::thread::hardware_concurrency());
 }
 
 // ============================================================
@@ -111,7 +104,7 @@ void print_thread_info(int index)
 
 void movable_task(int value)
 {
-    safe_print("[5] 可移动线程 - value: " + std::to_string(value));
+    SPDLOG_INFO("[5] 可移动线程 - value: {}", value);
 }
 
 // ============================================================
@@ -139,7 +132,7 @@ private:
 
 void parallel_accumulate_demo()
 {
-    safe_print("[7] 并行累加开始");
+    SPDLOG_INFO("[7] 并行累加开始");
 
     const long long N = 1000000;
     std::vector<long long> data(N);
@@ -164,7 +157,7 @@ void parallel_accumulate_demo()
 
     long long total = std::accumulate(results.begin(), results.end(), 0LL);
     long long expected = N * (N + 1) / 2;
-    safe_print("[7] 并行累加结果: " + std::to_string(total) + " (预期: " + std::to_string(expected) + ")");
+    SPDLOG_INFO("[7] 并行累加结果: {} (预期: {})", total, expected);
 }
 
 // ============================================================
@@ -178,7 +171,7 @@ void throwing_function()
 
 void exception_demo()
 {
-    safe_print("[8] 异常处理演示开始");
+    SPDLOG_INFO("[8] 异常处理演示开始");
 
     std::thread t([]() {
         try
@@ -187,12 +180,12 @@ void exception_demo()
         }
         catch (const std::exception& e)
         {
-            safe_print("[8] 捕获线程异常: " + std::string(e.what()));
+            SPDLOG_ERROR("[8] 捕获线程异常: {}", e.what());
         }
     });
     t.join();
 
-    safe_print("[8] 异常处理演示结束");
+    SPDLOG_INFO("[8] 异常处理演示结束");
 }
 
 // ============================================================
@@ -224,12 +217,18 @@ void safe_increment(int& counter, std::mutex& mtx, int iterations)
 
 int main()
 {
-    std::cout << "=== std::thread 完整接口演示 ===\n\n";
+#ifdef _WIN32
+	SetConsoleOutputCP(CP_UTF8);
+	SetConsoleCP(CP_UTF8);
+#endif
+    init_logger();
+
+    SPDLOG_INFO("=== std::thread 完整接口演示 ===\n");
 
     // ----------------------------------------------------------
     // 1. 基本线程创建
     // ----------------------------------------------------------
-    std::cout << "--- 1. 基本线程创建 ---\n";
+    SPDLOG_INFO("--- 1. 基本线程创建 ---");
 
     std::thread t1(basic_function);
     std::thread t2(basic_lambda);
@@ -245,44 +244,44 @@ int main()
     // ----------------------------------------------------------
     // 2. 参数传递
     // ----------------------------------------------------------
-    std::cout << "\n--- 2. 参数传递 ---\n";
+    SPDLOG_INFO("\n--- 2. 参数传递 ---");
 
     int value = 10;
     std::thread t7(modify_value, std::ref(value));
     t7.join();
-    std::cout << "  主线程中 value = " << value << "\n";
+    SPDLOG_INFO("  主线程中 value = {}", value);
 
     std::string msg = "hello world";
     std::thread t8(by_value_copy, msg);
     t8.join();
-    std::cout << "  原始字符串未变: " << msg << "\n";
+    SPDLOG_INFO("  原始字符串未变: {}", msg);
 
     // ----------------------------------------------------------
     // 3. join 和 detach
     // ----------------------------------------------------------
-    std::cout << "\n--- 3. join 和 detach ---\n";
+    SPDLOG_INFO("\n--- 3. join 和 detach ---");
 
     std::thread t9(long_task, "任务A", 1);
     std::thread t10(long_task, "任务B", 2);
 
-    std::cout << "  t9 joinable: " << std::boolalpha << t9.joinable() << "\n";
-    std::cout << "  t10 joinable: " << t10.joinable() << "\n";
+    SPDLOG_INFO("  t9 joinable: {}", t9.joinable());
+    SPDLOG_INFO("  t10 joinable: {}", t10.joinable());
 
     t9.join();
-    std::cout << "  t9 join 后 joinable: " << t9.joinable() << "\n";
+    SPDLOG_INFO("  t9 join 后 joinable: {}", t9.joinable());
 
     t10.detach();
-    std::cout << "  t10 detach 后 joinable: " << t10.joinable() << "\n";
+    SPDLOG_INFO("  t10 detach 后 joinable: {}", t10.joinable());
 
     std::this_thread::sleep_for(3s);
 
     // ----------------------------------------------------------
     // 4. 线程 ID 和硬件并发
     // ----------------------------------------------------------
-    std::cout << "\n--- 4. 线程 ID 和硬件并发 ---\n";
+    SPDLOG_INFO("\n--- 4. 线程 ID 和硬件并发 ---");
 
-    std::cout << "  主线程 id: " << std::this_thread::get_id() << "\n";
-    std::cout << "  硬件并发数: " << std::thread::hardware_concurrency() << "\n";
+    SPDLOG_INFO("  主线程 ");
+    SPDLOG_INFO("  硬件并发数: {}", std::thread::hardware_concurrency());
 
     std::vector<std::thread> info_threads;
     for (int i = 0; i < 4; ++i)
@@ -293,44 +292,44 @@ int main()
     // ----------------------------------------------------------
     // 5. 线程移动
     // ----------------------------------------------------------
-    std::cout << "\n--- 5. 线程移动 ---\n";
+    SPDLOG_INFO("\n--- 5. 线程移动 ---");
 
     std::thread t11(movable_task, 100);
     std::thread t12 = std::move(t11);
-    std::cout << "  t11 move 后 joinable: " << t11.joinable() << "\n";
-    std::cout << "  t12 joinable: " << t12.joinable() << "\n";
+    SPDLOG_INFO("  t11 move 后 joinable: {}", t11.joinable());
+    SPDLOG_INFO("  t12 joinable: {}", t12.joinable());
     t12.join();
 
     // ----------------------------------------------------------
     // 6. RAII 线程包装器
     // ----------------------------------------------------------
-    std::cout << "\n--- 6. RAII ScopedThread ---\n";
+    SPDLOG_INFO("\n--- 6. RAII ScopedThread ---");
 
     {
         ScopedThread st(std::thread([]() {
-            safe_print("[6] ScopedThread 析构时自动 join");
+            SPDLOG_INFO("[6] ScopedThread 析构时自动 join");
         }));
     }
-    safe_print("[6] ScopedThread 已析构");
+    SPDLOG_INFO("[6] ScopedThread 已析构");
 
     // ----------------------------------------------------------
     // 7. 并行累加
     // ----------------------------------------------------------
-    std::cout << "\n--- 7. 并行累加 ---\n";
+    SPDLOG_INFO("\n--- 7. 并行累加 ---");
 
     parallel_accumulate_demo();
 
     // ----------------------------------------------------------
     // 8. 异常处理
     // ----------------------------------------------------------
-    std::cout << "\n--- 8. 异常处理 ---\n";
+    SPDLOG_INFO("\n--- 8. 异常处理 ---");
 
     exception_demo();
 
     // ----------------------------------------------------------
     // 9. 数据竞争（不安全）
     // ----------------------------------------------------------
-    std::cout << "\n--- 9. 数据竞争（不安全）---\n";
+    SPDLOG_INFO("\n--- 9. 数据竞争（不安全）---");
 
     int unsafe_counter = 0;
     const int iterations = 100000;
@@ -343,13 +342,12 @@ int main()
         for (auto& t : threads)
             t.join();
     }
-    std::cout << "  不安全计数器: " << unsafe_counter
-              << " (预期: " << num_threads * iterations << ")\n";
+    SPDLOG_WARN("  不安全计数器: {} (预期: {})", unsafe_counter, num_threads * iterations);
 
     // ----------------------------------------------------------
     // 10. 数据竞争（安全，使用 mutex）
     // ----------------------------------------------------------
-    std::cout << "\n--- 10. 数据竞争（安全，mutex）---\n";
+    SPDLOG_INFO("\n--- 10. 数据竞争（安全，mutex）---");
 
     int safe_counter = 0;
     std::mutex counter_mutex;
@@ -361,20 +359,19 @@ int main()
         for (auto& t : threads)
             t.join();
     }
-    std::cout << "  安全计数器: " << safe_counter
-              << " (预期: " << num_threads * iterations << ")\n";
+    SPDLOG_INFO("  安全计数器: {} (预期: {})", safe_counter, num_threads * iterations);
 
     // ----------------------------------------------------------
     // 总结
     // ----------------------------------------------------------
-    std::cout << "\n=== 演示完成 ===\n";
-    std::cout << "std::thread 核心接口：\n";
-    std::cout << "  构造: function, lambda, functor, member function, static member\n";
-    std::cout << "  参数: 值传递, std::ref 引用传递\n";
-    std::cout << "  控制: join(), detach(), joinable()\n";
-    std::cout << "  信息: get_id(), hardware_concurrency()\n";
-    std::cout << "  移动: std::move() 转移所有权\n";
-    std::cout << "  线程安全: std::mutex + std::lock_guard\n";
+    SPDLOG_INFO("\n=== 演示完成 ===");
+    SPDLOG_INFO("std::thread 核心接口：");
+    SPDLOG_INFO("  构造: function, lambda, functor, member function, static member");
+    SPDLOG_INFO("  参数: 值传递, std::ref 引用传递");
+    SPDLOG_INFO("  控制: join(), detach(), joinable()");
+    SPDLOG_INFO("  信息: get_id(), hardware_concurrency()");
+    SPDLOG_INFO("  移动: std::move() 转移所有权");
+    SPDLOG_INFO("  线程安全: spdlog 内置线程安全");
 
     return 0;
 }

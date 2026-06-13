@@ -9,5 +9,14 @@ endif()
 
 project(CppConcurrency LANGUAGES CXX)
 
+include(FetchContent)
+set(FETCHCONTENT_BASE_DIR "${CMAKE_SOURCE_DIR}/packages/${DEPS_SUFFIX}")
+FetchContent_Declare(
+  spdlog
+  GIT_REPOSITORY https://github.com/gabime/spdlog.git
+  GIT_TAG        v1.15.0
+)
+FetchContent_MakeAvailable(spdlog)
+
 add_subdirectory(HelloWorld)
 add_subdirectory(01_std_thread)

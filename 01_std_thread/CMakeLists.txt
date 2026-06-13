@@ -9,4 +9,4 @@ else()
 endif()
 
 find_package(Threads REQUIRED)
-target_link_libraries(01_std_thread PRIVATE Threads::Threads)
+target_link_libraries(01_std_thread PRIVATE Threads::Threads spdlog::spdlog)
