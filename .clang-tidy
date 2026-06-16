@@ -1,0 +1,29 @@
+Checks: >
+  -*,
+  clang-analyzer-*,
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-narrowing-conversions,
+  cert-*,
+  -cert-dcl50-cpp,
+  -cert-err33-c,
+  -cert-err34-c,
+  cppcoreguidelines-avoid-goto,
+  cppcoreguidelines-no-malloc,
+  cppcoreguidelines-slicing,
+  hicpp-avoid-goto,
+  misc-*,
+  -misc-unused-using-decls,
+  modernize-*,
+  -modernize-use-trailing-return-type,
+  performance-*,
+  readability-braces-around-statements,
+  readability-identifier-naming
+
+WarningsAsErrors: ''
+
+HeaderFilterRegex: '.*'
+
+CheckOptions:
+  - key: modernize-use-nullptr.NullMacros
+    value: 'NULL'

@@ -18,5 +18,12 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(spdlog)
 
+option(BUILD_TESTS "Build tests" ON)
+
 add_subdirectory(HelloWorld)
 add_subdirectory(01_std_thread)
+
+if(BUILD_TESTS)
+  enable_testing()
+  add_subdirectory(tests)
+endif()

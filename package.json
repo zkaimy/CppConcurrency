@@ -3,7 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky",
+    "format": "clang-format -i HelloWorld/*.cpp HelloWorld/*.h 01_std_thread/*.cpp tests/*.cpp",
+    "format:check": "clang-format --dry-run --Werror HelloWorld/*.cpp HelloWorld/*.h 01_std_thread/*.cpp tests/*.cpp",
+    "lint": "clang-tidy HelloWorld/*.cpp 01_std_thread/*.cpp -- -std:c++23",
+    "configure": "cmake --preset win-vs",
+    "build": "cmake --build --preset win-vs-debug",
+    "build:release": "cmake --build --preset win-vs-release",
+    "test": "cmake --build --preset win-vs-debug --target test_quick_sort",
+    "test:run": "cmake --build --preset win-vs-debug --target test_quick_sort && out/build/win-vs/tests/Debug/test_quick_sort.exe"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.0.2",

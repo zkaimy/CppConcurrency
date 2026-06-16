@@ -1,0 +1,184 @@
+# Visual Studio 生成的 .clang 格式文件
+
+# 此文件中的样式选项是通过“工具”>“选项”
+# 复制当前 IDE 格式配置的最佳尝试。 但
+# 应该验证以下样式选项:
+# AfterClass, AfterControlStatement, AfterEnum, AfterFunction, AfterNamespace, 
+# AfterStruct, AfterUnion
+
+# 代码风格的默认选项
+# BasedOnStyle: Google
+
+# 访问修饰符的缩进
+AccessModifierOffset: -4
+# 全局缩进
+IndentWidth: 4
+
+# 在左括号后水平对齐参数
+AlignAfterOpenBracket: Align
+
+# 连续的赋值语句等号对齐
+AlignConsecutiveAssignments: true
+
+# 连续的赋值语句声明对齐
+AlignConsecutiveDeclarations: true
+
+# 对齐连字符 '\'
+AlignEscapedNewlines: Left
+
+# 二元运算符和三元运算符在操作符处对齐
+AlignOperands: true
+
+# 注释对齐
+AlignTrailingComments: true
+
+# 如果函数声明不适用于一行，则允许将函数声明的所有参数放到下一行
+AllowAllParametersOfDeclarationOnNextLine: true
+
+# 如果为false，函数声明或函数定义的参数要么都在同一行上，要么都有一行
+BinPackParameters: false
+
+# 简短的块语句放在一行
+AllowShortBlocksOnASingleLine: false
+
+# 简短的case标签放在一行
+AllowShortCaseLabelsOnASingleLine: true
+
+# 简短的函数放在一行
+AllowShortFunctionsOnASingleLine: InlineOnly
+
+# 简短的判断语句放在一行
+AllowShortIfStatementsOnASingleLine: false
+
+# 简短的循环语句放在一行
+AllowShortLoopsOnASingleLine: false
+
+# 函数返回类型位置
+AlwaysBreakAfterReturnType: None
+
+# 函数名缩进
+IndentWrappedFunctionNames: false
+
+# 多行字符串在新行缩进处对齐
+AlwaysBreakBeforeMultilineStrings: false
+
+# 模板声明处换行
+AlwaysBreakTemplateDeclarations: Yes
+
+# 如果为false，函数调用的参数要么都在同一行上，要么各有一行。
+BinPackArguments: false
+
+# 花括号位置
+BreakBeforeBraces: Custom
+BraceWrapping:
+    AfterClass: true
+    AfterControlStatement: true
+    AfterEnum: true
+    AfterFunction: true
+    AfterNamespace: false
+    AfterStruct: true
+    AfterUnion: true
+    AfterExternBlock: true
+    BeforeCatch: true
+    BeforeElse: true
+    SplitEmptyFunction: true
+    SplitEmptyRecord: true
+    SplitEmptyNamespace: true
+
+# 二元运算符对齐
+BreakBeforeBinaryOperators: None
+
+# 三元运算符对齐
+BreakBeforeTernaryOperators: true
+
+# 构造函数初始化列表对齐
+BreakConstructorInitializers: BeforeComma
+ConstructorInitializerAllOnOneLineOrOnePerLine: false
+
+# 父类对齐
+BreakInheritanceList: BeforeComma
+
+# 断开字符串常量
+BreakStringLiterals: true
+
+# 单行长度限制
+ColumnLimit: 0
+
+# 连续命名空间位于同一行
+CompactNamespaces: false
+
+# 构造函数初始化列表和继承列表的缩进数
+ConstructorInitializerIndentWidth: 4
+
+# 连续行缩进数
+ContinuationIndentWidth: 4
+
+# C++11 风格的初始化列表
+Cpp11BracedListStyle: true
+
+# 命名空间尾部添加注释
+FixNamespaceComments: true
+
+# include 顺序
+# IncludeBlocks: Regroup
+
+
+# 缩进switch语句中的Case
+IndentCaseLabels: false
+
+# 要使用的预处理器指令缩进样式。
+IndentPPDirectives: AfterHash
+
+# 语言
+Language: Cpp
+
+# 命名空间的内部缩进
+NamespaceIndentation: None
+
+# 指针位置
+PointerAlignment: Right
+
+# 处理过长的注释
+ReflowComments: true
+
+# 排序命名空间
+SortUsingDeclarations: true
+
+# C 类型的强制类型转换后加空格
+SpaceAfterCStyleCast: true
+
+# C 类型的强制类型转换中加空格
+SpacesInCStyleCastParentheses: false
+
+# Template 后加空格
+SpaceAfterTemplateKeyword: true
+
+# 赋值运算符前加空格
+SpaceBeforeAssignmentOperators: true
+
+# C++11初始化列表前加空格
+SpaceBeforeCpp11BracedList: true
+
+# 括号前加空格
+SpaceBeforeParens: ControlStatements
+
+# 空括号中间加空格
+SpaceInEmptyParentheses: false
+
+# 行尾注释前的空格
+SpacesBeforeTrailingComments: 3
+
+# 尖括号中的空格
+SpacesInAngles: false
+
+# 方括号中的空格
+SpacesInSquareBrackets: false
+
+# 标准库版本
+Standard: Cpp11
+
+# Tab宽度
+TabWidth: 4
+
+# 使用制表符
+UseTab: Never
