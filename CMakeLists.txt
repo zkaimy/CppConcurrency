@@ -22,6 +22,7 @@ option(BUILD_TESTS "Build tests" ON)
 
 add_subdirectory(HelloWorld)
 add_subdirectory(01_std_thread)
+add_subdirectory(02_std_mutex)
 
 if(BUILD_TESTS)
   enable_testing()

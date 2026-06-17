@@ -53,5 +53,6 @@ npm run lint
 - `HelloWorld/HelloWorld.cpp` — 主入口，包含并行累加、OpenMP 示例、快排演示
 - `HelloWorld/sequential_quick_sort.h` — 多种快排实现（拷贝版、原地版、范围版）
 - `01_std_thread/main.cpp` — std::thread 完整接口演示
+- `02_std_mutex/main.cpp` — std::mutex 完整功能演示
 - `tests/test_quick_sort.cpp` — 快排单元测试（13 个用例）
 - 全部逻辑在一个构建目标内，无库、无子包。
