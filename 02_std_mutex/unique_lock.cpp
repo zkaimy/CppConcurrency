@@ -217,14 +217,15 @@ void demo_unique_lock_mutex()
     int value = 0;
 
     std::thread t([&]() {
-        std::unique_lock<std::mutex> lock(mtx);
+        std::unique_lock<std::mutex> lock(mtx, std::defer_lock);
         std::mutex* associated = lock.mutex();
         SPDLOG_INFO("  关联的 mutex 指针有效: {}", associated != nullptr);
+        SPDLOG_INFO("  关联的 mutex 是否持有锁: {}", lock.owns_lock());
 
         associated->lock();
         ++value;
         associated->unlock();
-        SPDLOG_INFO("  通过 mutex() 操作: value = {}", value);
+        SPDLOG_INFO("  通过 mutex() 手动操作: value = {}", value);
     });
 
     t.join();
